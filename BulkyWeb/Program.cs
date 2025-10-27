@@ -1,3 +1,6 @@
+using BulkyWeb.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace BulkyWeb
 {
     public class Program
@@ -8,6 +11,12 @@ namespace BulkyWeb
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<ApplicationDbContext>
+                (x=>x.UseSqlServer
+                (builder.Configuration.GetConnectionString
+                ("DefaultConection")
+                )
+                );
 
             var app = builder.Build();
 
@@ -28,8 +37,10 @@ namespace BulkyWeb
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
+                pattern: "{controller=Home}/{action=Index}/{id?}");//Id? is represents the optional
+                //The Url Pattern for Routing is considered after the domain name
+                //ex:https://localhost:77777/Category/index/3
+                //   https://localhost:77777/{controller}/{action}/{id}
             app.Run();
         }
     }
